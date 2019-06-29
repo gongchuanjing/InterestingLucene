@@ -27,17 +27,23 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
  */
 public class IndexManager {
 	
+	private String pathname = "index";//存放索引的位置
+	
 	public IndexWriter getIndexWriter() throws Exception {
-		Directory directory = FSDirectory.open(new File("E:\\Develop\\temp\\LuceneIndex"));
+		Directory directory = FSDirectory.open(new File(pathname));
 		Analyzer analyzer = new IKAnalyzer();
 		IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
 		IndexWriter indexWriter = new IndexWriter(directory, conf);
 		return indexWriter;
 	}
 
+	/**
+	 * 增
+	 * @throws Exception
+	 */
 	@Test
 	public void addDocument() throws Exception {
-//		Directory directory = FSDirectory.open(new File("E:\\Develop\\temp\\LuceneIndex"));
+//		Directory directory = FSDirectory.open(new File(pathname));
 //		Analyzer analyzer = new IKAnalyzer();
 //		IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
 //		IndexWriter indexWriter = new IndexWriter(directory, conf);
@@ -59,7 +65,10 @@ public class IndexManager {
 		indexWriter.close();
 	}
 	
-	//删除全部文档
+	/**
+	 * 删：删除全部文档
+	 * @throws Exception
+	 */
 	@Test
 	public void deleteAllDocument() throws Exception {
 		//获得IndexWriter对象
@@ -70,6 +79,10 @@ public class IndexManager {
 		indexWriter.close();
 	}
 	
+	/**
+	 * 删：根据条件
+	 * @throws Exception
+	 */
 	@Test
 	public void deleteDocumentByQuery() throws Exception {
 		//获得IndexWriter对象
@@ -85,7 +98,10 @@ public class IndexManager {
 		indexWriter.close();
 	}
 	
-	//更新索引库
+	/**
+	 * 改：更新索引库
+	 * @throws Exception
+	 */
 	@Test
 	public void updateDocument() throws Exception {
 		IndexWriter indexWriter = getIndexWriter();
