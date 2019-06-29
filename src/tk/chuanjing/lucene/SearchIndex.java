@@ -28,9 +28,12 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
  * @version 1.0
  */
 public class SearchIndex {
+	
+	private String pathname = "index";//存放索引的位置
+	
 	private IndexSearcher getIndexSearcher() throws Exception {
 		//====1指定索引库存放的位置
-		Directory directory = FSDirectory.open(new File("E:\\Develop\\temp\\LuceneIndex"));
+		Directory directory = FSDirectory.open(new File(pathname));
 		
 		//====2使用IndexReader对象打开索引库
 		IndexReader indexReader = DirectoryReader.open(directory);
@@ -67,44 +70,12 @@ public class SearchIndex {
 	
 	@Test
 	public void testMatchAllDocsQuery() throws Exception {
-		/*
-		//====1指定索引库存放的位置
-		Directory directory = FSDirectory.open(new File("E:\\Develop\\temp\\LuceneIndex"));
-		//====2使用IndexReader对象打开索引库
-		IndexReader indexReader = DirectoryReader.open(directory);
-		//====3创建一个IndexSearcher对象，构造方法需要一个indexReader对象
-		IndexSearcher indexSearcher = new IndexSearcher(indexReader);
-		*/
 		IndexSearcher indexSearcher = getIndexSearcher();
 		
 		//====4创建一个查询对象,需要指定查询域及要查询的关键字。
 		Query query = new MatchAllDocsQuery();
 		System.out.println(query);
 		
-		/*
-		//====5查询索引库
-		//参数1：查询条件
-		//参数2：查询结果返回的最大值
-		TopDocs topDocs = indexSearcher.search(query, 100);
-		ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-		System.out.println("查询结果总记录数："  + topDocs.totalHits);
-		
-		//====6遍历查询结果并打印
-		for (ScoreDoc scoreDoc : scoreDocs) {
-			//取文档id
-			int docId = scoreDoc.doc;
-			//通过id查询文档对象
-			Document document = indexSearcher.doc(docId);
-			//取属性
-			System.out.println(document.get("name"));
-			System.out.println(document.get("size"));
-			System.out.println(document.get("content"));
-			System.out.println(document.get("path"));
-		}
-		
-		//====7关闭IndexReader对象
-		indexReader.close();
-		*/
 		printResult(indexSearcher, query);
 	}
 	
@@ -144,6 +115,12 @@ public class SearchIndex {
 		printResult(getIndexSearcher(), query);
 	}
 	
+	/**
+	 * 重要：在大多数情况下，用户的输入不一定是一个词条，所以我们
+	 * 需要对用户的输入进行分词，将输入编程多个词条之后进行查询。
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testQueryParser() throws Exception {
 		//创建一个QueryParser对象。
@@ -160,6 +137,10 @@ public class SearchIndex {
 		printResult(getIndexSearcher(), query);
 	}
 	
+	/**
+	 * 重要：有时候业务会提供多个字段供用户选择，店铺，商家，旺旺。
+	 * @throws Exception
+	 */
 	@Test
 	public void testMultiFileQueryParser() throws Exception {
 		//指定默认搜索域
